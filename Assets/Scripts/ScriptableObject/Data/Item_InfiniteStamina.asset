@@ -20,5 +20,7 @@ MonoBehaviour:
   dropPrefab: {fileID: 0}
   canStack: 0
   maxStackAmount: 0
-  consumables: []
+  consumables:
+  - consumableType: 2
+    value: 30
   equipPrefab: {fileID: 0}

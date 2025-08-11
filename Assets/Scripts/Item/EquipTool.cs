@@ -20,11 +20,13 @@ public class EquipTool : Equip
 
     private Animator animator;
     private Camera camera;
+    private Transform RayStartPosition;
 
     private void Start()
     {
         animator = GetComponent<Animator>();
         camera = Camera.main;
+        RayStartPosition = CharacterManager.Instance.Player.RayStartPosition;
     }
 
     public override void OnAttackInput()
@@ -47,7 +49,7 @@ public class EquipTool : Equip
 
     public void OnHit()
     {
-        Ray ray = camera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
+        Ray ray = new Ray(RayStartPosition.position, camera.transform.forward);
         RaycastHit hit;
 
         if(Physics.Raycast(ray, out hit, attackDistance))
