@@ -4,12 +4,17 @@ using UnityEngine;
 
 public class UICondition : MonoBehaviour
 {
-    public Condition health;
-    public Condition hunger;
-    public Condition stamina;
+    public Condition Health;
+    public Condition Hunger;
+    public Condition Energy;
 
-    private void Start()
+    void Start()
     {
-        CharacterManager.Instance.Player.condition.uiCondition = this;
+        CharacterManager.Instance.Player.condition.UICondition = this;
+    }
+
+    void Update()
+    {
+        
     }
 }

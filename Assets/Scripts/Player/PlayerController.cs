@@ -1,45 +1,47 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
     [Header("Movement")]
-    [SerializeField] private float moveSpeed;
-    [SerializeField] private float jumpPower;
-    [SerializeField] private LayerMask groundLayerMask;
+    public float MoveSpeed;
+    public float JumpForce;
     private Vector2 _curMovementInput;
-
+    private Rigidbody _rigidbody;
+    public LayerMask groundLayerMask;
     [Header("Look")]
-    [SerializeField] private Transform cameraController;
-    [SerializeField] private float minXLook;
-    [SerializeField] private float maxXLook;
-    private float _camCurXRot;
-    [SerializeField] float lookSensitivity;
-
-    private Vector2 _mouseDelta;
-
-    [HideInInspector]
+    public Transform cameraContainer;
+    public float minXLook;
+    public float maxXLook;
+    private float camCurXRot;
+    public float lookSensitivity = 1f;
+    private Vector2 mouseDelta;
+    private PlayerCondition _condition;
     public bool canLook = true;
 
-    private Rigidbody _rigidbody;
+    public Action inventory;
+
+    [Header("Stamina usage")]
+    [SerializeField] private float runStaminaUsage;
+    [SerializeField] private float jumpStaminaUsage;
+
+    private bool isRunning = false;
 
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
     }
 
-    private void Start()
+    void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+        _condition = GetComponent<PlayerCondition>();
     }
-
     private void FixedUpdate()
     {
         Move();
     }
-
     private void LateUpdate()
     {
         if (canLook)
@@ -50,65 +52,107 @@ public class PlayerController : MonoBehaviour
     private void Move()
     {
         Vector3 dir = transform.forward * _curMovementInput.y + transform.right * _curMovementInput.x;
-        dir *= moveSpeed;
+        dir *= MoveSpeed;
+        if (isRunning)
+        {
+            if (_condition.UseStamina(runStaminaUsage))
+            {
+                dir *= 2f;
+            }
+            else
+            {
+                isRunning = false; // Stop running if stamina is not enou
+            }
+        }
         dir.y = _rigidbody.velocity.y;
-
         _rigidbody.velocity = dir;
     }
+
     private void CameraLook()
     {
-        _camCurXRot += _mouseDelta.y * lookSensitivity;
-        _camCurXRot = Mathf.Clamp(_camCurXRot, minXLook, maxXLook);
-        cameraController.localEulerAngles = new Vector3(-_camCurXRot, 0, 0);
-
-        transform.eulerAngles += new Vector3(0, _mouseDelta.x * lookSensitivity, 0);
+        camCurXRot += mouseDelta.y * lookSensitivity;
+        camCurXRot = Mathf.Clamp(camCurXRot, minXLook, maxXLook);
+        cameraContainer.localEulerAngles = new Vector3(-camCurXRot, 0, 0);
+        transform.eulerAngles += new Vector3(0, mouseDelta.x * lookSensitivity, 0);
     }
-    private bool IsGrounded()
+    public void OnMove(InputAction.CallbackContext context)
+    {
+        if (context.phase == InputActionPhase.Performed)
+        {
+            _curMovementInput = context.ReadValue<Vector2>();
+        }
+        else if ((context.phase == InputActionPhase.Canceled))
+        {
+            _curMovementInput = Vector2.zero;
+        }
+    }
+
+    public void OnLook(InputAction.CallbackContext context)
+    {
+        mouseDelta = context.ReadValue<Vector2>();
+    }
+    public void OnJump(InputAction.CallbackContext context)
+    {
+        if (context.phase == InputActionPhase.Started && IsGrounded())
+        {
+            if(!_condition.UseStamina(jumpStaminaUsage))
+            {
+                return;
+            }
+            _rigidbody.AddForce(Vector3.up * JumpForce, ForceMode.Impulse);
+            _condition.UseStamina(jumpStaminaUsage);
+        }
+    }
+    bool IsGrounded()
     {
         Ray[] rays = new Ray[4]
         {
-            new Ray(transform.position + (transform.forward * 0.2f) + (transform.up * 0.01f), Vector3.down),
-            new Ray(transform.position + (-transform.forward * 0.2f) + (transform.up * 0.01f), Vector3.down),
-            new Ray(transform.position + (transform.right * 0.2f) + (transform.up * 0.01f), Vector3.down),
-            new Ray(transform.position + (-transform.right * 0.2f) +(transform.up * 0.01f), Vector3.down)
-        }; 
+            new Ray(transform.position + (transform.forward*0.2f) + (transform.up*0.01f),Vector3.down),
+            new Ray(transform.position + (-transform.forward*0.2f) + (transform.up*0.01f),Vector3.down),
+            new Ray(transform.position + (transform.right*0.2f) + (transform.up*0.01f),Vector3.down),
+            new Ray(transform.position + (-transform.right*0.2f) + (transform.up*0.01f),Vector3.down)
+        };
 
-        for (int i = 0; i<rays.Length; i++)
+        for (int i = 0; i < rays.Length; i++)
         {
             if (Physics.Raycast(rays[i], 0.1f, groundLayerMask))
             {
                 return true;
             }
         }
+
         return false;
     }
-    public void OnLookInput(InputAction.CallbackContext context)
+
+    public void OnInventory(InputAction.CallbackContext context)
     {
-        _mouseDelta = context.ReadValue<Vector2>();
+        if (context.phase == InputActionPhase.Started)
+        {
+            inventory?.Invoke();
+            ToggleCursor();
+        }
     }
 
-    public void OnMoveInput(InputAction.CallbackContext context)
+    void ToggleCursor()
     {
-        if(context.phase == InputActionPhase.Performed)
+        bool toggle = Cursor.lockState == CursorLockMode.Locked;
+        Cursor.lockState = toggle ? CursorLockMode.None : CursorLockMode.Locked;
+        canLook = !toggle;
+    }
+    public void MushroomSuperJump()
+    {
+        _rigidbody.AddForce(Vector3.up * JumpForce * 10, ForceMode.Impulse);
+    }
+
+    public void OnRun(InputAction.CallbackContext context)
+    {
+        if (context.phase == InputActionPhase.Performed)
         {
-            _curMovementInput = context.ReadValue<Vector2>();
+            isRunning = true;
         }
         else if (context.phase == InputActionPhase.Canceled)
         {
-            _curMovementInput = Vector2.zero;
+            isRunning = false;
         }
-    }
-    public void OnJumpInput(InputAction.CallbackContext context)
-    {
-        if(context.phase == InputActionPhase.Started && IsGrounded())
-        {
-            _rigidbody.AddForce(Vector2.up * jumpPower, ForceMode.Impulse);
-        }
-    }
-
-    public void ToggleCursor(bool toggle)
-    {
-        Cursor.lockState = toggle ? CursorLockMode.None : CursorLockMode.Locked;
-        canLook = !toggle;
     }
 }

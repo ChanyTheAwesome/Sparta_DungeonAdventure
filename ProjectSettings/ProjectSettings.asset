@@ -4,7 +4,7 @@
 PlayerSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 26
-  productGUID: 17fad5bce73065f4bb88d3c05a43605c
+  productGUID: ef589184c65ace44e8fce844f7eb2211
   AndroidProfiler: 0
   AndroidFilterTouchesWhenObscured: 0
   AndroidEnableSustainedPerformanceMode: 0
@@ -13,7 +13,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: DefaultCompany
-  productName: Sparta_DungeonAdventure
+  productName: 3DSurvival
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -766,14 +766,14 @@ PlayerSettings:
   apiCompatibilityLevelPerPlatform: {}
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
-  metroPackageName: Sparta_DungeonAdventure
+  metroPackageName: 3DSurvival
   metroPackageVersion: 
   metroCertificatePath: 
   metroCertificatePassword: 
   metroCertificateSubject: 
   metroCertificateIssuer: 
   metroCertificateNotAfter: 0000000000000000
-  metroApplicationDescription: Sparta_DungeonAdventure
+  metroApplicationDescription: 3DSurvival
   wsaImages: {}
   metroTileShortName: 
   metroTileShowName: 0
@@ -842,10 +842,10 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 2
   windowsGamepadBackendHint: 0
-  cloudProjectId: 72f2d2e2-2383-4ab0-aea3-4d2dc1788d6c
+  cloudProjectId: 92b5e5b4-0f69-4172-89d1-4671ca8c2c89
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: Sparta_DungeonAdventure
+  projectName: 3DSurvival
   organizationId: chanyblackbear
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0

@@ -2,28 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
-public class DamageIndicator : MonoBehaviour
+public class DamageIndicator: MonoBehaviour
 {
-    [SerializeField] private Image image;
-    [SerializeField] private float flashSpeed;
+    public Image image;
+    public float flashSpeed;
 
     private Coroutine coroutine;
 
     private void Start()
     {
-        CharacterManager.Instance.Player.condition.onTakeDamage += Flash;
+        CharacterManager.Instance.Player.condition.OnTakeDamage += Flash;
     }
-
     public void Flash()
     {
-        if (coroutine != null)
+        if(coroutine != null)
         {
             StopCoroutine(coroutine);
         }
-
         image.enabled = true;
-        image.color = new Color(1.0f, 105 / 255.0f, 105 / 255.0f);
+        image.color = new Color(1f, 100f / 255f, 100f / 255f);
         coroutine = StartCoroutine(FadeAway());
     }
 
@@ -32,13 +29,12 @@ public class DamageIndicator : MonoBehaviour
         float startAlpha = 0.3f;
         float a = startAlpha;
 
-        while (a > 0.0f)
+        while (a > 0)
         {
-            a -= (startAlpha / flashSpeed) * Time.deltaTime;
-            image.color = new Color(1f, 100 / 255.0f, 100 / 255.0f, a);
+            a -= (startAlpha / flashSpeed)* Time.deltaTime;
+            image.color = new Color(1f, 100f / 255f, 100f / 255f, a);
             yield return null;
         }
-
         image.enabled = false;
     }
 }

@@ -3,52 +3,83 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public interface IDamageable
+{
+    void TakePhysicalDamage(int damage);
+}
 public class PlayerCondition : MonoBehaviour, IDamageable
 {
-    public UICondition uiCondition;
-    
-    private Condition _health { get { return uiCondition.health; } }
-    private Condition _hunger { get { return uiCondition.hunger; } }
-    private Condition _stamina { get { return uiCondition.stamina; } }
+    public UICondition UICondition;
+    private Condition health { get { return UICondition.Health; } }
+    private Condition hunger { get { return UICondition.Hunger; } }
+    private Condition energy { get { return UICondition.Energy; } }
 
-    [SerializeField] private float noHungerHealthDecay;
-    
+    public float noHungerHealthLossRate;
+
+    public event Action OnTakeDamage;
     [HideInInspector]
-    public event Action onTakeDamage;
-
-    private void Update()
+    public bool IsInfiniteStamina;
+    private Coroutine _coroutine;
+    void Update()
     {
-        _hunger.Subtract(_hunger.passiveValue * Time.deltaTime);
-        _stamina.Add(_stamina.passiveValue * Time.deltaTime);
-        if(_hunger.curValue < 0.0f)
+        energy.Add(energy.passiveValue * Time.deltaTime);
+        health.Add(health.passiveValue * Time.deltaTime);
+        if (hunger.curValue <= 0)
         {
-            _health.Subtract(noHungerHealthDecay * Time.deltaTime);
+            health.Subtract(noHungerHealthLossRate * Time.deltaTime);
         }
-
-        if (_health.curValue < 0.0f)
+        else
+        {
+            hunger.Subtract(hunger.passiveValue * Time.deltaTime);
+        }
+        if(health.curValue <= 0)
         {
             Die();
         }
     }
-
     public void Heal(float amount)
     {
-        _health.Add(amount);
+        health.Add(amount);
+    }
+    public void TakePhysicalDamage(int damage)
+    {
+        health.Subtract(damage);
+        OnTakeDamage?.Invoke();
     }
 
     public void Eat(float amount)
     {
-        _hunger.Add(amount);
+        hunger.Add(amount);
     }
-
     public void Die()
     {
         Debug.Log("Player has died.");
     }
 
-    public void TakePhysicalDamage(int damageAmount)
+    public bool UseStamina(float amount)
     {
-        _health.Subtract(damageAmount);
-        onTakeDamage?.Invoke();
+        if(energy.curValue - amount < 0)
+        {
+            return false;
+        }
+        if (!IsInfiniteStamina)
+        {
+            energy.Subtract(amount);
+        }
+        return true;
+    }
+    public void InfiniteStamina(float time)
+    {
+        if(_coroutine != null)
+        {
+            StopCoroutine(_coroutine);
+        }
+        _coroutine = StartCoroutine(CoroutineInfiniteStamina(time));
+    }
+    private IEnumerator CoroutineInfiniteStamina(float time)
+    {
+        IsInfiniteStamina = true;
+        yield return new WaitForSeconds(time);
+        IsInfiniteStamina = false;
     }
 }
