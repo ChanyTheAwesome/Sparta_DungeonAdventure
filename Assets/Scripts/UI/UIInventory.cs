@@ -40,7 +40,7 @@ public class UIInventory : MonoBehaviour
         inventoryWindow.SetActive(false);
         itemSlots = new ItemSlot[slotPanel.childCount];
 
-        for(int i = 0; i<itemSlots.Length; i++)
+        for (int i = 0; i < itemSlots.Length; i++)
         {
             itemSlots[i] = slotPanel.GetChild(i).GetComponent<ItemSlot>();
             itemSlots[i].index = i;
@@ -87,7 +87,7 @@ public class UIInventory : MonoBehaviour
         if (data.canStack)
         {
             ItemSlot slot = GetItemStack(data);
-            if(slot != null)
+            if (slot != null)
             {
                 slot.quantity++;
                 UpdateUI();
@@ -98,7 +98,7 @@ public class UIInventory : MonoBehaviour
 
         ItemSlot emptySlot = GetEmptySlot();
 
-        if(emptySlot != null)
+        if (emptySlot != null)
         {
             emptySlot.itemData = data;
             emptySlot.quantity = 1;
@@ -113,7 +113,7 @@ public class UIInventory : MonoBehaviour
 
     void UpdateUI()
     {
-        for(int i = 0; i<itemSlots.Length; i++)
+        for (int i = 0; i < itemSlots.Length; i++)
         {
             if (itemSlots[i].itemData != null)
             {
@@ -128,7 +128,7 @@ public class UIInventory : MonoBehaviour
 
     ItemSlot GetItemStack(ItemData data)
     {
-        for(int i = 0; i<itemSlots.Length; i++)
+        for (int i = 0; i < itemSlots.Length; i++)
         {
             if (itemSlots[i].itemData == data && itemSlots[i].quantity < data.maxStackAmount)
             {
@@ -145,7 +145,7 @@ public class UIInventory : MonoBehaviour
 
     ItemSlot GetEmptySlot()
     {
-        for(int i = 0; i<itemSlots.Length; i++)
+        for (int i = 0; i < itemSlots.Length; i++)
         {
             if (itemSlots[i].itemData == null)
             {
@@ -171,7 +171,7 @@ public class UIInventory : MonoBehaviour
         selectedStatName.text = string.Empty;
         selectedStatValue.text = string.Empty;
 
-        for(int i = 0; i<selectedItem.consumables.Length; i++)
+        for (int i = 0; i < selectedItem.consumables.Length; i++)
         {
             selectedStatName.text += selectedItem.consumables[i].consumableType.ToString() + "\n";
             selectedStatValue.text += selectedItem.consumables[i].value.ToString() + "\n";
@@ -185,11 +185,11 @@ public class UIInventory : MonoBehaviour
 
     public void OnUseButton()
     {
-        if(selectedItem.itemType == ItemType.Consumable)
+        if (selectedItem.itemType == ItemType.Consumable)
         {
-            for(int i = 0; i<selectedItem.consumables.Length; i++)
+            for (int i = 0; i < selectedItem.consumables.Length; i++)
             {
-                switch(selectedItem.consumables[i].consumableType)
+                switch (selectedItem.consumables[i].consumableType)
                 {
                     case ConsumableType.Health:
                         condition.Heal(selectedItem.consumables[i].value);
@@ -199,6 +199,12 @@ public class UIInventory : MonoBehaviour
                         break;
                     case ConsumableType.InfiniteStamina:
                         condition.InfiniteStamina(selectedItem.consumables[i].value);
+                        break;
+                    case ConsumableType.ReduceHungerPassiveValue:
+                        condition.ReduceHungerPassiveValue(selectedItem.consumables[i].value);
+                        break;
+                    case ConsumableType.Fast:
+                        controller.ToggleIsFast(selectedItem.consumables[i].value);
                         break;
                 }
             }
@@ -245,7 +251,7 @@ public class UIInventory : MonoBehaviour
         CharacterManager.Instance.Player.equip.UnEquip();
         UpdateUI();
 
-        if(selectedItemIndex == index)
+        if (selectedItemIndex == index)
         {
             SelectItem(selectedItemIndex);
         }

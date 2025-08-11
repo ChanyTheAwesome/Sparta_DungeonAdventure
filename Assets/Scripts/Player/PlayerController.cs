@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,7 +10,10 @@ public class PlayerController : MonoBehaviour
     public float JumpForce;
     private Vector2 _curMovementInput;
     private Rigidbody _rigidbody;
-    public LayerMask groundLayerMask;
+    [HideInInspector]
+    public bool IsFast = false;
+
+    [SerializeField] private LayerMask groundLayerMask;
     [Header("Look")]
     public Transform cameraContainer;
     public float minXLook;
@@ -27,6 +31,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float jumpStaminaUsage;
 
     private bool isRunning = false;
+    [Header("Climbing")]
+    public LayerMask climbableLayerMask;
+    private Camera _camera;
+    [SerializeField] private Transform climbCheckPosition;
+    private bool _isExhaustedWhileClimb = false;
 
     private void Awake()
     {
@@ -37,6 +46,7 @@ public class PlayerController : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         _condition = GetComponent<PlayerCondition>();
+        _camera = Camera.main;
     }
     private void FixedUpdate()
     {
@@ -51,6 +61,32 @@ public class PlayerController : MonoBehaviour
     }
     private void Move()
     {
+        if (IsClimbing())
+        {
+            if (_isExhaustedWhileClimb)
+            {
+                // 등반 중 탈진 상태면 중력만 적용하고 아무것도 하지 않음
+                _rigidbody.useGravity = true;
+                return;
+            }
+
+            if (_condition.UseStamina(runStaminaUsage))
+            {
+                _rigidbody.useGravity = false;
+                _rigidbody.velocity = Vector3.zero;
+                _rigidbody.AddForce(Vector3.up * MoveSpeed * _curMovementInput.y * 0.5f, ForceMode.VelocityChange);
+            }
+            else
+            {
+                StartCoroutine(ExhaustedWhileClimb());
+            }
+            return;
+        }
+        else
+        {
+            _rigidbody.useGravity = true;
+            _isExhaustedWhileClimb = false; // 등반이 끝나면 탈진 상태 해제
+        }
         Vector3 dir = transform.forward * _curMovementInput.y + transform.right * _curMovementInput.x;
         dir *= MoveSpeed;
         if (isRunning)
@@ -61,13 +97,37 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                isRunning = false; // Stop running if stamina is not enou
+                isRunning = false;
             }
+        }
+        if (IsFast)
+        {
+            dir *= 1.5f;
         }
         dir.y = _rigidbody.velocity.y;
         _rigidbody.velocity = dir;
     }
 
+    private IEnumerator ExhaustedWhileClimb()
+    {
+        _isExhaustedWhileClimb = true;
+        _rigidbody.useGravity = true;
+        yield return new WaitForSeconds(5.0f);
+        _isExhaustedWhileClimb = false;
+    }
+    private bool IsClimbing()
+    {
+        Ray ray = new Ray(climbCheckPosition.position, _camera.transform.forward);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, 0.3f, climbableLayerMask))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
     private void CameraLook()
     {
         camCurXRot += mouseDelta.y * lookSensitivity;
@@ -95,7 +155,7 @@ public class PlayerController : MonoBehaviour
     {
         if (context.phase == InputActionPhase.Started && IsGrounded())
         {
-            if(!_condition.UseStamina(jumpStaminaUsage))
+            if (!_condition.UseStamina(jumpStaminaUsage))
             {
                 return;
             }
@@ -154,5 +214,15 @@ public class PlayerController : MonoBehaviour
         {
             isRunning = false;
         }
+    }
+    public void ToggleIsFast(float duration)
+    {
+        StartCoroutine(SetIsFast(duration));
+    }
+    private IEnumerator SetIsFast(float duration)
+    {
+        IsFast = true;
+        yield return new WaitForSeconds(duration);
+        IsFast = false;
     }
 }

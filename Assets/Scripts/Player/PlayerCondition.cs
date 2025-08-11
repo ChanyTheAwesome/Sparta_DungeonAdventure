@@ -82,4 +82,12 @@ public class PlayerCondition : MonoBehaviour, IDamageable
         yield return new WaitForSeconds(time);
         IsInfiniteStamina = false;
     }
+    public void ReduceHungerPassiveValue(float value)
+    {
+        hunger.passiveValue = (1 - value) * hunger.passiveValue;
+        if (hunger.passiveValue < 0)
+        {
+            hunger.passiveValue = 0;
+        }
+    }
 }
