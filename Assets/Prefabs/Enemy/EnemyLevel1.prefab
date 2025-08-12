@@ -705,7 +705,7 @@ GameObject:
   - component: {fileID: 5039363490748866428}
   - component: {fileID: 3366599414409776870}
   m_Layer: 0
-  m_Name: NPC
+  m_Name: EnemyLevel1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -765,18 +765,21 @@ MonoBehaviour:
   runSpeed: 4
   dropOnDeath:
   - {fileID: 11400000, guid: 4974bfcd760689e48a93aebbfa872705, type: 2}
-  - {fileID: 11400000, guid: b8f4bc43721dd1b43937b8004aad07bb, type: 2}
-  possibleDrops: []
-  specialDrop: {fileID: 0}
-  specialDropChance: 0
+  possibleDrops:
+  - {fileID: 11400000, guid: 198b4793fe9d61b438c8749d01e5e79d, type: 2}
+  - {fileID: 11400000, guid: d46c06f880d341e4b995fe325387c7cc, type: 2}
+  - {fileID: 11400000, guid: fe0b00148ded68b46b06ccbd648698b6, type: 2}
+  specialDrop: {fileID: 11400000, guid: b79f04c76b653b14f9e36648071997f0, type: 2}
+  specialDropChance: 20
   detectDistance: 5
   minWanderDistance: 5
   maxWanderDistance: 10
   minWanderWaitTime: 1
   maxWanderWaitTime: 5
-  damage: 5
+  damage: 0
   attackRate: 1.5
   attackDistance: 2
+  playerDistance: 0
   fieldOfView: 120
 --- !u!65 &5039363490748866428
 BoxCollider:

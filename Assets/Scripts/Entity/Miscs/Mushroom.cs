@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class Mushroom : MonoBehaviour
 {
+    [SerializeField] private float jumpForce;
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            CharacterManager.Instance.Player.controller.MushroomSuperJump();
+            CharacterManager.Instance.Player.controller.MushroomSuperJump(jumpForce);
         }
     }
 }

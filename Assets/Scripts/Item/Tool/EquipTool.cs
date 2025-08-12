@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -50,17 +51,24 @@ public class EquipTool : Equip
     public void OnHit()
     {
         Ray ray = new Ray(RayStartPosition.position, camera.transform.forward);
-        RaycastHit hit;
+        RaycastHit[] hits = Physics.RaycastAll(ray, attackDistance);
 
-        if(Physics.Raycast(ray, out hit, attackDistance))
+        foreach (RaycastHit hit in hits)
         {
+
+            GameObject player = CharacterManager.Instance.Player.gameObject;
+            if (hit.collider.gameObject == player)
+                continue;
+
             if (doesGatherResources && hit.collider.TryGetComponent(out Resource resource))
             {
                 resource.Gather(hit.point, hit.normal);
+                break;
             }
-            else if(doesDealDamage && hit.collider.TryGetComponent(out IDamageable damageable))
+            else if (doesDealDamage && hit.collider.TryGetComponent(out IDamageable damageable))
             {
                 damageable.TakePhysicalDamage(damage);
+                break;
             }
         }
     }

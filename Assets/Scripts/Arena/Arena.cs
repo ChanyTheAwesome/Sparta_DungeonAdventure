@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public interface IRewardable
+{
+    public void Reward();
+}
 public class Arena : MonoBehaviour
 {
     [SerializeField] private GameObject SpawnNPCPrefab;
@@ -10,14 +14,36 @@ public class Arena : MonoBehaviour
     [SerializeField] private Transform laserPointB;
     [SerializeField] private Transform[] spawnArea;
     [SerializeField] private GameObject door;
-    [SerializeField] private LayerMask playerLayerMask;
-    public bool MonsterSpawned = false;
-    public bool PlayerInLaser = false;
-    private List<GameObject> spawnedMonsters = new List<GameObject>();
+    public GameObject Door { get { return door; } }
+    [SerializeField] public GameObject rewardObject;
+    public GameObject RewardObject { get { return rewardObject; } }
+    [SerializeField] private Transform itemDropPosition;
+    public Transform ItemDropPosition { get { return itemDropPosition; } }
 
+    [HideInInspector] public bool MonsterSpawned = false;
+    [HideInInspector] public bool IsActive = false;
+    [HideInInspector] public bool IsRewarded = false;
     private void Update()
-    { 
-        LaserCheck();
+    {
+        if (IsActive)
+        {
+            LaserCheck();
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            ArenaManager.Instance.ActivateThisArena(this);
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if(other.CompareTag("Player"))
+        {
+            ArenaManager.Instance.DeactivateArena();
+        }
     }
 
     private void LaserCheck()
@@ -28,43 +54,23 @@ public class Arena : MonoBehaviour
         {
             if (hit.collider.CompareTag("Player"))
             {
-                if (!PlayerInLaser)
+                if (!MonsterSpawned)
                 {
-                    PlayerInLaser = true;
-                    if(!MonsterSpawned)
-                    {
-                        MonsterSpawned = true;
-                        SpawnMonsters();
-                    }
-                    else
-                    {
-                        DestroyMonsters();
-                        MonsterSpawned = false;
-                        if(door != null)
-                        {
-                            door.SetActive(true);
-                            door.GetComponent<Collider>().enabled = false;
-                        }
-                    }
+                    MonsterSpawned = true;
+                    SpawnMonsters();
                 }
             }
-            else
-            {
-                PlayerInLaser = false;
-                door.GetComponent<Collider>().enabled = true;
-            }
         }
-        
     }
     private void SpawnMonsters()
     {
         for(int i = 0; i<npcCount; i++)
         {
             Vector3 spawnPosition = GetSpawnPosition();
-            GameObject go = Instantiate(SpawnNPCPrefab, spawnPosition, Quaternion.identity);
+            GameObject go = Instantiate(SpawnNPCPrefab, spawnPosition, Quaternion.identity, this.transform);
             if (go != null)
             {
-                spawnedMonsters.Add(go);
+                ArenaManager.Instance.spawnedMonsters.Add(go);
             }
         }
     }
@@ -89,16 +95,5 @@ public class Arena : MonoBehaviour
             spawnPosition = transform.position;
         }
         return spawnPosition;
-    }
-    private void DestroyMonsters()
-    {
-        foreach (GameObject monster in spawnedMonsters)
-        {
-            if (monster != null)
-            {
-                Destroy(monster);
-            }
-        }
-        spawnedMonsters.Clear();
     }
 }

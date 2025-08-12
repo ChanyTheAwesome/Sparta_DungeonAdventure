@@ -180,10 +180,9 @@ public class NPC : MonoBehaviour, IDamageable
         return angle < fieldOfView * 0.5f;
     }
 
-    public void TakePhysicalDamage(int damaage)
+    public void TakePhysicalDamage(int damageAmount)
     {
-        Debug.Log(damage + "," + health);
-        health -= damage;
+        health -= damageAmount;
         if (health <= 0)
         {
             Die();
@@ -195,23 +194,22 @@ public class NPC : MonoBehaviour, IDamageable
     {
         if (Random.Range(0, specialDropChance) == 0)
         {
-            Instantiate(specialDrop.dropPrefab, transform.position + Vector3.up * 2, Quaternion.identity);
+            ArenaManager.Instance.drops.Add(specialDrop);
         }
         else
         {
             int index = Random.Range(0, possibleDrops.Length);
-            Instantiate(possibleDrops[index].dropPrefab, transform.position + Vector3.up * 2, Quaternion.identity);
+            ArenaManager.Instance.drops.Add(possibleDrops[index]);
         }
         for (int i = 0; i < dropOnDeath.Length; i++)
         {
-            Instantiate(dropOnDeath[i].dropPrefab, transform.position + Vector3.up * 2, Quaternion.identity);
+            ArenaManager.Instance.drops.Add(dropOnDeath[i]);
         }
-        Destroy(gameObject);
+        ArenaManager.Instance.RemoveEnemy(gameObject);
     }
 
     IEnumerator DamageFlash()
     {
-        Debug.Log("Taking Damage");
         for (int i = 0; i < meshRenderers.Length; i++)
         {
             meshRenderers[i].material.color = new Color(1.0f, 0.6f, 0.6f);

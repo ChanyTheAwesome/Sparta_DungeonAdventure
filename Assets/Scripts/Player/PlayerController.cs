@@ -37,6 +37,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform climbCheckPosition;
     private bool _isExhaustedWhileClimb = false;
 
+    //Launch
+    private bool isLaunching = false;
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
@@ -61,6 +63,10 @@ public class PlayerController : MonoBehaviour
     }
     private void Move()
     {
+        if (isLaunching)
+        {
+            return;
+        }
         if (IsClimbing())
         {
             if (_isExhaustedWhileClimb)
@@ -199,9 +205,9 @@ public class PlayerController : MonoBehaviour
         Cursor.lockState = toggle ? CursorLockMode.None : CursorLockMode.Locked;
         canLook = !toggle;
     }
-    public void MushroomSuperJump()
+    public void MushroomSuperJump(float forceMultiplier)
     {
-        _rigidbody.AddForce(Vector3.up * JumpForce * 10, ForceMode.Impulse);
+        _rigidbody.AddForce(Vector3.up * JumpForce * forceMultiplier, ForceMode.Impulse);
     }
 
     public void OnRun(InputAction.CallbackContext context)
@@ -213,6 +219,24 @@ public class PlayerController : MonoBehaviour
         else if (context.phase == InputActionPhase.Canceled)
         {
             isRunning = false;
+        }
+    }
+    public void LaunchPlatformJump(Vector3 direction, float force)
+    {
+        _rigidbody.AddForce(direction * force, ForceMode.Impulse);
+        StartCoroutine(LaunchCoroutine());
+    }
+    private IEnumerator LaunchCoroutine()
+    {
+        isLaunching = true;
+        while (true)
+        {
+            if (IsGrounded())
+            {
+                isLaunching = false;
+                yield break;
+            }
+            yield return null;
         }
     }
     public void ToggleIsFast(float duration)

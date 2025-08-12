@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MovingPlatform : MonoBehaviour
+public class MovingPlatform : MonoBehaviour, IRewardable
 {
 
     [SerializeField] private Transform _pointA;
@@ -14,8 +14,7 @@ public class MovingPlatform : MonoBehaviour
     private bool _isMovingToB;
     private void Start()
     {
-        _platform.transform.position = _pointA.position;
-        _isMovingToB = true;
+        this.gameObject.SetActive(false);
     }
     private void Update()
     {
@@ -39,5 +38,11 @@ public class MovingPlatform : MonoBehaviour
         {
             _isMovingToB = false;
         }
+    }
+    public void Reward()
+    {
+        this.gameObject.SetActive(true);
+        _platform.transform.position = _pointA.position;
+        _isMovingToB = true;
     }
 }
