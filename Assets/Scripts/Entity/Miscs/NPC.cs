@@ -16,6 +16,9 @@ public class NPC : MonoBehaviour, IDamageable
     public float walkSpeed;
     public float runSpeed;
     public ItemData[] dropOnDeath;
+    public ItemData[] possibleDrops;
+    public ItemData specialDrop;
+    public int specialDropChance;
 
     [Header("AI")]
     private NavMeshAgent agent;
@@ -190,9 +193,18 @@ public class NPC : MonoBehaviour, IDamageable
 
     void Die()
     {
-        for(int i = 0; i<dropOnDeath.Length; i++)
+        if (Random.Range(0, specialDropChance) == 0)
         {
-            Instantiate(dropOnDeath[i].dropPrefab,transform.position + Vector3.up*2, Quaternion.identity);
+            Instantiate(specialDrop.dropPrefab, transform.position + Vector3.up * 2, Quaternion.identity);
+        }
+        else
+        {
+            int index = Random.Range(0, possibleDrops.Length);
+            Instantiate(possibleDrops[index].dropPrefab, transform.position + Vector3.up * 2, Quaternion.identity);
+        }
+        for (int i = 0; i < dropOnDeath.Length; i++)
+        {
+            Instantiate(dropOnDeath[i].dropPrefab, transform.position + Vector3.up * 2, Quaternion.identity);
         }
         Destroy(gameObject);
     }
@@ -200,14 +212,14 @@ public class NPC : MonoBehaviour, IDamageable
     IEnumerator DamageFlash()
     {
         Debug.Log("Taking Damage");
-        for (int i = 0; i< meshRenderers.Length; i++)
+        for (int i = 0; i < meshRenderers.Length; i++)
         {
             meshRenderers[i].material.color = new Color(1.0f, 0.6f, 0.6f);
         }
 
         yield return new WaitForSeconds(0.6f);
 
-        for(int i = 0; i< meshRenderers.Length; i++)
+        for (int i = 0; i < meshRenderers.Length; i++)
         {
             meshRenderers[i].material.color = Color.white;
         }
