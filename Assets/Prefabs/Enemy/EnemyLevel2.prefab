@@ -705,7 +705,7 @@ GameObject:
   - component: {fileID: 5039363490748866428}
   - component: {fileID: 3366599414409776870}
   m_Layer: 0
-  m_Name: EnemyLevel1
+  m_Name: EnemyLevel2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -760,7 +760,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d290143ecf91bb4784f81dcd5bacfa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 15
+  health: 40
   walkSpeed: 1
   runSpeed: 4
   dropOnDeath:
@@ -769,15 +769,16 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 198b4793fe9d61b438c8749d01e5e79d, type: 2}
   - {fileID: 11400000, guid: d46c06f880d341e4b995fe325387c7cc, type: 2}
   - {fileID: 11400000, guid: fe0b00148ded68b46b06ccbd648698b6, type: 2}
-  specialDrop: {fileID: 11400000, guid: b79f04c76b653b14f9e36648071997f0, type: 2}
-  specialDropChance: 20
+  - {fileID: 11400000, guid: 91c5c696714eddb479792382258effa0, type: 2}
+  specialDrop: {fileID: 11400000, guid: cf8604103b316a64a929357384ffb459, type: 2}
+  specialDropChance: 40
   detectDistance: 5
   minWanderDistance: 5
   maxWanderDistance: 10
   minWanderWaitTime: 1
   maxWanderWaitTime: 5
-  damage: 7
-  attackRate: 1.3
+  damage: 10
+  attackRate: 1.5
   attackDistance: 2
   playerDistance: 0
   fieldOfView: 120

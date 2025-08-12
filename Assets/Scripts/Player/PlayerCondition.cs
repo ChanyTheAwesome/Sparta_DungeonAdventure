@@ -53,7 +53,8 @@ public class PlayerCondition : MonoBehaviour, IDamageable
     }
     public void Die()
     {
-        Debug.Log("Player has died.");
+        health.Add(health.maxValue * 0.3f);
+        this.gameObject.transform.position = new Vector3(6.41f, 0.957f, 0.0f);
     }
 
     public bool UseStamina(float amount)
@@ -89,5 +90,11 @@ public class PlayerCondition : MonoBehaviour, IDamageable
         {
             hunger.passiveValue = 0;
         }
+    }
+    public void AddMaxHealth(float value)
+    {
+        health.maxValue += value;
+        health.startValue += value;
+        health.curValue = health.startValue;
     }
 }

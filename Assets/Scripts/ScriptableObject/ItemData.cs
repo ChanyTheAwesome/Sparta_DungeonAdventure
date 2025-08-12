@@ -14,7 +14,8 @@ public enum ConsumableType
     Hunger,
     InfiniteStamina,
     ReduceHungerPassiveValue,
-    Fast
+    Fast,
+    MaxHealth
 }
 
 [Serializable]
