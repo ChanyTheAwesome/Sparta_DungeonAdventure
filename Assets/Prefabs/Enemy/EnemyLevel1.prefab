@@ -764,7 +764,7 @@ MonoBehaviour:
   walkSpeed: 1
   runSpeed: 4
   dropOnDeath:
-  - {fileID: 11400000, guid: 355f3308c5b49694a8506243a8d3ae07, type: 2}
+  - {fileID: 11400000, guid: 4974bfcd760689e48a93aebbfa872705, type: 2}
   possibleDrops:
   - {fileID: 11400000, guid: 198b4793fe9d61b438c8749d01e5e79d, type: 2}
   - {fileID: 11400000, guid: d46c06f880d341e4b995fe325387c7cc, type: 2}
