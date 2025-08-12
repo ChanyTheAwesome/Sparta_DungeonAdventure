@@ -766,6 +766,9 @@ MonoBehaviour:
   dropOnDeath:
   - {fileID: 11400000, guid: 4974bfcd760689e48a93aebbfa872705, type: 2}
   - {fileID: 11400000, guid: b8f4bc43721dd1b43937b8004aad07bb, type: 2}
+  possibleDrops: []
+  specialDrop: {fileID: 0}
+  specialDropChance: 0
   detectDistance: 5
   minWanderDistance: 5
   maxWanderDistance: 10
@@ -805,7 +808,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 1860986909786487992}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 0.74
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50

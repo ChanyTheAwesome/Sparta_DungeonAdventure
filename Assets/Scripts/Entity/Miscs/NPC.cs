@@ -37,7 +37,7 @@ public class NPC : MonoBehaviour, IDamageable
     private float lastAttackTime;
     public float attackDistance;
 
-    private float playerDistance;
+    public float playerDistance;
 
     public float fieldOfView = 120f;
 
@@ -135,7 +135,7 @@ public class NPC : MonoBehaviour, IDamageable
     }
     void AttackingUpdate()
     {
-        if (playerDistance > attackDistance && IsPlayerInFieldOfView())
+        if (playerDistance < attackDistance && IsPlayerInFieldOfView())
         {
             agent.isStopped = true;
             if (Time.time - lastAttackTime > attackRate)
