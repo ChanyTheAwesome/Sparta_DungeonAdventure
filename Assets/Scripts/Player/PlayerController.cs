@@ -229,6 +229,7 @@ public class PlayerController : MonoBehaviour
     private IEnumerator LaunchCoroutine()
     {
         isLaunching = true;
+        yield return new WaitForSeconds(0.5f);
         while (true)
         {
             if (IsGrounded())
