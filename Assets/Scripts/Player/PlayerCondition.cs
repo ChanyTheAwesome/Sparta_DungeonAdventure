@@ -53,6 +53,7 @@ public class PlayerCondition : MonoBehaviour, IDamageable
     }
     public void Die()
     {
+        health.curValue = 0;
         health.Add(health.maxValue);
         hunger.Add(hunger.maxValue);
         energy.Add(energy.maxValue);

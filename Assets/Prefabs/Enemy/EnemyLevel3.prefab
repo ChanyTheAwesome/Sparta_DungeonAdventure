@@ -779,7 +779,7 @@ MonoBehaviour:
   maxWanderWaitTime: 5
   damage: 50
   attackRate: 1.5
-  attackDistance: 2
+  attackDistance: 6
   playerDistance: 0
   fieldOfView: 120
 --- !u!65 &5039363490748866428
