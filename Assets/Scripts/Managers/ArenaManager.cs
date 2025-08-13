@@ -62,6 +62,11 @@ public class ArenaManager : MonoBehaviour
             spawnedMonsters.Remove(go);
             Destroy(go);
         }
+        else
+        {
+            Destroy(go);
+            return;
+        }
         if (spawnedMonsters.Count == 0)
         {
             foreach (ItemData item in drops)
@@ -76,7 +81,6 @@ public class ArenaManager : MonoBehaviour
                 currentArena.IsRewarded = true;
                 RewardCheck();
             }
-
         }
     }
     private void RewardCheck()
