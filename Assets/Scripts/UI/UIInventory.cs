@@ -209,6 +209,9 @@ public class UIInventory : MonoBehaviour
                     case ConsumableType.MaxHealth:
                         condition.AddMaxHealth(selectedItem.consumables[i].value);
                         break;
+                    case ConsumableType.IncreaseHealthPassiveValue:
+                        condition.IncreaseHealthPassiveValue(selectedItem.consumables[i].value);
+                        break;
                 }
             }
             RemoveSelectedItem();

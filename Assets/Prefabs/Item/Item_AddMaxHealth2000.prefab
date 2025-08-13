@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &5940850786375166107
+--- !u!1 &3101038851621989381
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,49 +8,49 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5271391370719973067}
-  - component: {fileID: 594795407580998630}
-  - component: {fileID: 7080076607955161660}
-  - component: {fileID: 8121458554078081566}
-  - component: {fileID: 2522526080133541214}
-  - component: {fileID: 5740004007366216991}
+  - component: {fileID: 8226919050626291318}
+  - component: {fileID: 4305640515267025733}
+  - component: {fileID: 3357945650821068932}
+  - component: {fileID: 186551273877700353}
+  - component: {fileID: 5410938973497442413}
+  - component: {fileID: 5483337020659519234}
   m_Layer: 7
-  m_Name: Item_ReduceHunger100
+  m_Name: Item_AddMaxHealth2000
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5271391370719973067
+--- !u!4 &8226919050626291318
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5940850786375166107}
+  m_GameObject: {fileID: 3101038851621989381}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8.366, y: 0.765, z: 0.19566268}
+  m_LocalPosition: {x: 9.04, y: 0.765, z: 0.19566268}
   m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &594795407580998630
+--- !u!33 &4305640515267025733
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5940850786375166107}
+  m_GameObject: {fileID: 3101038851621989381}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &7080076607955161660
+--- !u!23 &3357945650821068932
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5940850786375166107}
+  m_GameObject: {fileID: 3101038851621989381}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -64,7 +64,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0188b082a00b3634a9a686ca419e1195, type: 2}
+  - {fileID: 2100000, guid: 3146f5989a864f0478e1086b62144352, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -86,26 +86,26 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &8121458554078081566
+--- !u!114 &186551273877700353
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5940850786375166107}
+  m_GameObject: {fileID: 3101038851621989381}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 274da5e5189475343900f9107f9ede0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data: {fileID: 11400000, guid: 3f32f904c960c374fb212470d8d0afae, type: 2}
---- !u!54 &2522526080133541214
+  data: {fileID: 11400000, guid: 5c3b2d16cc7a22145a72e8d1727ad155, type: 2}
+--- !u!54 &5410938973497442413
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5940850786375166107}
+  m_GameObject: {fileID: 3101038851621989381}
   serializedVersion: 4
   m_Mass: 1
   m_Drag: 0
@@ -126,13 +126,13 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &5740004007366216991
+--- !u!65 &5483337020659519234
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5940850786375166107}
+  m_GameObject: {fileID: 3101038851621989381}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2

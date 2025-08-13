@@ -770,6 +770,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d46c06f880d341e4b995fe325387c7cc, type: 2}
   - {fileID: 11400000, guid: fe0b00148ded68b46b06ccbd648698b6, type: 2}
   - {fileID: 11400000, guid: 91c5c696714eddb479792382258effa0, type: 2}
+  - {fileID: 11400000, guid: 69359c824658f8244abf7785d855e806, type: 2}
   specialDrop: {fileID: 11400000, guid: cf8604103b316a64a929357384ffb459, type: 2}
   specialDropChance: 40
   detectDistance: 5

@@ -99,4 +99,13 @@ public class PlayerCondition : MonoBehaviour, IDamageable
         health.startValue += value;
         health.curValue = health.startValue;
     }
+
+    public void IncreaseHealthPassiveValue(float value)
+    {
+        health.passiveValue += value;
+        if (health.passiveValue < 0)
+        {
+            health.passiveValue = 0;
+        }
+    }
 }
