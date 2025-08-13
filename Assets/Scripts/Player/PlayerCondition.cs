@@ -53,7 +53,9 @@ public class PlayerCondition : MonoBehaviour, IDamageable
     }
     public void Die()
     {
-        health.Add(health.maxValue * 0.3f);
+        health.Add(health.maxValue);
+        hunger.Add(hunger.maxValue);
+        energy.Add(energy.maxValue);
         this.gameObject.transform.position = new Vector3(6.41f, 0.957f, 0.0f);
     }
 
