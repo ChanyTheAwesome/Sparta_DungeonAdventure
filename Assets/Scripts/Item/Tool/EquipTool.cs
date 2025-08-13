@@ -48,6 +48,10 @@ public class EquipTool : Equip
         attacking = false;
     }
 
+    /// <summary>
+    /// 플레이어가 공격 시 호출되며, Raycast를 사용해 공격 범위 내의 오브젝트를 탐지하여
+    /// 자원 채집 또는 데미지 처리를 수행합니다.
+    /// </summary>
     public void OnHit()
     {
         Ray ray = new Ray(RayStartPosition.position, camera.transform.forward);

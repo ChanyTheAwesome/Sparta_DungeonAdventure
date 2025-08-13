@@ -190,21 +190,26 @@ public class NPC : MonoBehaviour, IDamageable
         StartCoroutine(DamageFlash());
     }
 
+    // NPC가 사망할 때 호출되는 메서드
     void Die()
     {
+        // 특수 드랍 확률에 따라 특수 아이템 드랍
         if (Random.Range(0, specialDropChance) == 0)
         {
             ArenaManager.Instance.drops.Add(specialDrop);
         }
         else
         {
+            // 일반 드랍 아이템 중 하나를 랜덤하게 드랍
             int index = Random.Range(0, possibleDrops.Length);
             ArenaManager.Instance.drops.Add(possibleDrops[index]);
         }
+        // 사망 시 항상 드랍하는 아이템 추가
         for (int i = 0; i < dropOnDeath.Length; i++)
         {
             ArenaManager.Instance.drops.Add(dropOnDeath[i]);
         }
+        // NPC를 적 목록에서 제거
         ArenaManager.Instance.RemoveEnemy(gameObject);
     }
 

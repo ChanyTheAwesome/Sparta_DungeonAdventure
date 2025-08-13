@@ -3,64 +3,67 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+// 플레이어의 이동, 점프, 카메라 회전, 등반, 인벤토리 등 주요 컨트롤을 담당하는 클래스
 public class PlayerController : MonoBehaviour
 {
     [Header("Movement")]
-    public float MoveSpeed;
-    public float JumpForce;
-    private Vector2 _curMovementInput;
-    private Rigidbody _rigidbody;
+    public float MoveSpeed; // 이동 속도
+    public float JumpForce; // 점프 힘
+    private Vector2 _curMovementInput; // 현재 이동 입력값
+    private Rigidbody _rigidbody; // 플레이어의 Rigidbody
     [HideInInspector]
-    public bool IsFast = false;
+    public bool IsFast = false; // 일시적으로 빠른 상태 여부
 
-    [SerializeField] private LayerMask groundLayerMask;
+    [SerializeField] private LayerMask groundLayerMask; // 바닥 판정 레이어
     [Header("Look")]
-    public Transform cameraContainer;
-    public float minXLook;
-    public float maxXLook;
-    private float camCurXRot;
-    public float lookSensitivity = 1f;
-    private Vector2 mouseDelta;
-    private PlayerCondition _condition;
-    public bool canLook = true;
+    public Transform cameraContainer; // 카메라 컨테이너(회전용)
+    public float minXLook; // 카메라 X축 최소 각도
+    public float maxXLook; // 카메라 X축 최대 각도
+    private float camCurXRot; // 카메라 현재 X축 회전값
+    public float lookSensitivity = 1f; // 마우스 감도
+    private Vector2 mouseDelta; // 마우스 이동값
+    private PlayerCondition _condition; // 플레이어 상태(체력, 스태미나 등)
+    public bool canLook = true; // 카메라 회전 가능 여부
 
-    public Action inventory;
+    public Action inventory; // 인벤토리 열기 액션
 
     [Header("Stamina usage")]
-    [SerializeField] private float runStaminaUsage;
-    [SerializeField] private float jumpStaminaUsage;
+    [SerializeField] private float runStaminaUsage; // 달리기 시 소모 스태미나
+    [SerializeField] private float jumpStaminaUsage; // 점프 시 소모 스태미나
 
-    private bool isRunning = false;
+    private bool isRunning = false; // 달리기 상태
     [Header("Climbing")]
-    public LayerMask climbableLayerMask;
-    private Camera _camera;
-    [SerializeField] private Transform climbCheckPosition;
-    private bool _isExhaustedWhileClimb = false;
+    public LayerMask climbableLayerMask; // 등반 가능 레이어
+    private Camera _camera; // 메인 카메라 참조
+    [SerializeField] private Transform climbCheckPosition; // 등반 판정 위치
+    private bool _isExhaustedWhileClimb = false; // 등반 중 탈진 상태
 
     //Launch
-    private bool isLaunching = false;
+    private bool isLaunching = false; // 플랫폼 점프 중 상태
+
     private void Awake()
     {
-        _rigidbody = GetComponent<Rigidbody>();
+        _rigidbody = GetComponent<Rigidbody>(); // Rigidbody 컴포넌트 캐싱
     }
 
     void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        _condition = GetComponent<PlayerCondition>();
-        _camera = Camera.main;
+        Cursor.lockState = CursorLockMode.Locked; // 커서 잠금
+        _condition = GetComponent<PlayerCondition>(); // PlayerCondition 컴포넌트 캐싱
+        _camera = Camera.main; // 메인 카메라 캐싱
     }
     private void FixedUpdate()
     {
-        Move();
+        Move(); // 이동 처리
     }
     private void LateUpdate()
     {
         if (canLook)
         {
-            CameraLook();
+            CameraLook(); // 카메라 회전 처리
         }
     }
+    // 플레이어 이동 처리
     private void Move()
     {
         if (isLaunching)
@@ -84,7 +87,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                StartCoroutine(ExhaustedWhileClimb());
+                StartCoroutine(ExhaustedWhileClimb()); // 등반 중 탈진 코루틴 시작
             }
             return;
         }
@@ -114,6 +117,7 @@ public class PlayerController : MonoBehaviour
         _rigidbody.velocity = dir;
     }
 
+    // 등반 중 탈진 코루틴
     private IEnumerator ExhaustedWhileClimb()
     {
         _isExhaustedWhileClimb = true;
@@ -121,6 +125,7 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(5.0f);
         _isExhaustedWhileClimb = false;
     }
+    // 등반 가능 여부 판정
     private bool IsClimbing()
     {
         Ray ray = new Ray(climbCheckPosition.position, _camera.transform.forward);
@@ -134,6 +139,7 @@ public class PlayerController : MonoBehaviour
             return false;
         }
     }
+    // 카메라 회전 처리
     private void CameraLook()
     {
         camCurXRot += mouseDelta.y * lookSensitivity;
@@ -141,6 +147,7 @@ public class PlayerController : MonoBehaviour
         cameraContainer.localEulerAngles = new Vector3(-camCurXRot, 0, 0);
         transform.eulerAngles += new Vector3(0, mouseDelta.x * lookSensitivity, 0);
     }
+    // 이동 입력 처리
     public void OnMove(InputAction.CallbackContext context)
     {
         if (context.phase == InputActionPhase.Performed)
@@ -152,11 +159,12 @@ public class PlayerController : MonoBehaviour
             _curMovementInput = Vector2.zero;
         }
     }
-
+    // 마우스 입력 처리
     public void OnLook(InputAction.CallbackContext context)
     {
         mouseDelta = context.ReadValue<Vector2>();
     }
+    // 점프 입력 처리
     public void OnJump(InputAction.CallbackContext context)
     {
         if (context.phase == InputActionPhase.Started && IsGrounded())
@@ -169,6 +177,7 @@ public class PlayerController : MonoBehaviour
             _condition.UseStamina(jumpStaminaUsage);
         }
     }
+    // 바닥에 닿아있는지 판정
     bool IsGrounded()
     {
         Ray[] rays = new Ray[4]
@@ -189,7 +198,7 @@ public class PlayerController : MonoBehaviour
 
         return false;
     }
-
+    // 인벤토리 입력 처리
     public void OnInventory(InputAction.CallbackContext context)
     {
         if (context.phase == InputActionPhase.Started)
@@ -198,18 +207,19 @@ public class PlayerController : MonoBehaviour
             ToggleCursor();
         }
     }
-
+    // 커서 잠금/해제 및 카메라 회전 가능 여부 토글
     void ToggleCursor()
     {
         bool toggle = Cursor.lockState == CursorLockMode.Locked;
         Cursor.lockState = toggle ? CursorLockMode.None : CursorLockMode.Locked;
         canLook = !toggle;
     }
+    // 버섯 슈퍼 점프(특수 점프)
     public void MushroomSuperJump(float forceMultiplier)
     {
         _rigidbody.AddForce(Vector3.up * JumpForce * forceMultiplier, ForceMode.Impulse);
     }
-
+    // 달리기 입력 처리
     public void OnRun(InputAction.CallbackContext context)
     {
         if (context.phase == InputActionPhase.Performed)
@@ -221,11 +231,13 @@ public class PlayerController : MonoBehaviour
             isRunning = false;
         }
     }
+    // 플랫폼 점프(특수 이동) 처리
     public void LaunchPlatformJump(Vector3 direction, float force)
     {
         _rigidbody.AddForce(direction * force, ForceMode.Impulse);
         StartCoroutine(LaunchCoroutine());
     }
+    // 플랫폼 점프 후 착지까지 상태 관리 코루틴
     private IEnumerator LaunchCoroutine()
     {
         isLaunching = true;
@@ -240,10 +252,12 @@ public class PlayerController : MonoBehaviour
             yield return null;
         }
     }
+    // 일시적으로 빠른 상태 토글
     public void ToggleIsFast(float duration)
     {
         StartCoroutine(SetIsFast(duration));
     }
+    // 빠른 상태 지속 시간 관리 코루틴
     private IEnumerator SetIsFast(float duration)
     {
         IsFast = true;
